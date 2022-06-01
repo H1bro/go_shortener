@@ -18,13 +18,14 @@ func (s *Server) CommonHandler(w http.ResponseWriter, r *http.Request) {
 		// RESPONSE
 		w.Header().Set("content-type", "text/plain; charset=utf-8")
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		fmt.Fprintln(w, "Error: Method not allowed")
+		fmt.Fprint(w, "Error: Method not allowed")
 	}
 }
 
-// Эндпоинт POST / принимает в теле запроса строку URL для
-// сокращения и возвращает ответ с кодом 201 и сокращённым
-// URL в виде текстовой строки в теле.
+//Эндпоинт POST / принимает в теле запроса строку URL для
+//сокращения и возвращает ответ с кодом 201 и сокращённым
+//URL в виде текстовой строки в теле.
+
 func (s *Server) ShortLinkHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Only POST requests are allowed!", http.StatusMethodNotAllowed)
@@ -39,10 +40,10 @@ func (s *Server) ShortLinkHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Сокращаем и сохраняем
-	shortIdLink := MD5(string(longLink))[:8]
-	_, valid := dataBase[shortIdLink]
+	shortIDLink := MD5(string(longLink))[:8]
+	_, valid := dataBase[shortIDLink]
 	if !valid {
-		dataBase[shortIdLink] = string(longLink)
+		dataBase[shortIDLink] = string(longLink)
 	} else {
 		log.Panicln("Ссылка существует")
 	}
@@ -50,12 +51,13 @@ func (s *Server) ShortLinkHandler(w http.ResponseWriter, r *http.Request) {
 	// RESPONSE
 	w.Header().Set("content-type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintln(w, "http://"+s.Addr+"/"+shortIdLink)
+	fmt.Fprint(w, "http://"+s.Addr+"/"+shortIDLink)
 }
 
 // Эндпоинт GET /{id} принимает в качестве URL-параметра идентификатор
 // сокращённого URL и возвращает ответ с кодом 307 и
 // оригинальным URL в HTTP-заголовке Location.
+
 func (s *Server) RestoreLinkHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Only GET requests are allowed!", http.StatusMethodNotAllowed)
@@ -65,9 +67,9 @@ func (s *Server) RestoreLinkHandler(w http.ResponseWriter, r *http.Request) {
 	url := r.URL.RequestURI()
 
 	if url != "" {
-		shortIdLink := url[1:]
+		shortIDLink := url[1:]
 
-		longLink, valid := dataBase[shortIdLink]
+		longLink, valid := dataBase[shortIDLink]
 		if valid {
 			// RESPONSE
 			w.Header().Set("Location", longLink)
