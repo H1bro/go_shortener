@@ -1,6 +1,6 @@
 package main
 
-import "github.com/H1bro/yandex-practicum-go/internal/app/server"
+import "github.com/H1bro/go_shortener/internal/app/server"
 
 func main() {
 
